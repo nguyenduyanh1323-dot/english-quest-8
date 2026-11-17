@@ -119,6 +119,7 @@ footer{text-align:center;color:#7a8fa3;padding:1.5rem 1rem 2.5rem;font-size:.9re
     <div class="stat">🏅 Huy hiệu: <span id="badges">0</span></div>
     <div class="stat">📚 Từ đã thuộc: <span id="learned">0</span>/10</div>
   </div>
+  <button type="button" id="btnInstall" class="btn-primary" style="margin-top:.9rem;background:#ffc93c;color:#17324f;box-shadow:0 4px 14px rgba(0,0,0,.2);display:none">📲 Cài đặt ứng dụng về máy</button>
 </header>
 <main>
   <section class="card" id="mapCard">
@@ -666,6 +667,30 @@ document.getElementById("btnFinish").onclick=()=>{
 };
 renderStats();renderReview();setUnit(S.unit||"u1");
 if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol)){navigator.serviceWorker.register("sw.js").catch(()=>{});}
+(function(){
+ const btn=document.getElementById("btnInstall");if(!btn)return;
+ const isStandalone=window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
+ if(isStandalone)return;
+ let deferredPrompt=null;
+ const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+ if(isIOS){btn.style.display="inline-flex";btn.textContent="📲 Cài lên màn hình chính (iOS)";}
+ window.addEventListener("beforeinstallprompt",e=>{
+  e.preventDefault();deferredPrompt=e;btn.style.display="inline-flex";btn.textContent="📲 Cài đặt ứng dụng về máy";
+ });
+ btn.addEventListener("click",async()=>{
+  if(deferredPrompt){
+   deferredPrompt.prompt();
+   const{outcome}=await deferredPrompt.userChoice;
+   if(outcome==="accepted"){btn.style.display="none";}
+   deferredPrompt=null;
+  }else if(isIOS){
+   alert("Trên iPhone/iPad: bấm nút Chia sẻ (Share ⬆️) ở thanh dưới Safari, sau đó chọn 'Thêm vào MH chính' (Add to Home Screen).");
+  }else{
+   alert("Hãy mở bằng Chrome hoặc Edge và bấm biểu tượng Cài đặt (Install) trên thanh địa chỉ để đưa ứng dụng ra màn hình.");
+  }
+ });
+ window.addEventListener("appinstalled",()=>{btn.style.display="none";deferredPrompt=null;});
+})();
 </script>
 </body>
 </html>

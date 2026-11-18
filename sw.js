@@ -1,6 +1,6 @@
 // English Quest 8 — Service Worker: lưu bộ nhớ đệm để học ngoại tuyến
-const CACHE = "english-quest-8-v2";
-const ASSETS = ["./", "./index.html", "./manifest.json", "./icon.svg", "./teachers/teacher-mia.jpg", "./teachers/teacher-ethan.jpg", "./teachers/teacher-sofia.jpg"];
+const CACHE = "english-quest-8-v6";
+const ASSETS = ["./", "./index.html", "./manifest.json", "./icon.svg", "./teachers/teacher-mia.jpg", "./teachers/teacher-ethan.jpg", "./teachers/teacher-sofia.jpg", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
